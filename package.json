@@ -1,0 +1,15 @@
+{
+  "name": "opennodedb",
+  "version": "1.0.0",
+  "description": "An open source hash table and binary search db using node.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Matthew Snow",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "chalk": "^2.4.1"
+  }
+}
