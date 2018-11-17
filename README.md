@@ -69,7 +69,7 @@ db.read('Users', { name: 'Apple Pear'})
 | Reading by name 		""			 |  3.9 ms    	 |
 
 
-#Goals
+# Goals
 1. Implement Getters functionality
 2. Create a file persistence mechanism using child processes.
 3. Creating multiple driver mechanisms (using a tcp socket) with auth.
