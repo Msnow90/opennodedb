@@ -1,3 +1,4 @@
 node_modules
 data
 .dbconfig
+package-lock.json
