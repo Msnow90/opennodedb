@@ -1,7 +1,6 @@
 module.exports = function(dbInstance, modelName, queryObj) {
 
 	return new Promise((resolve, reject) => {
-
 		
 		var queryFields = Object.keys(queryObj);
 		var data = dbInstance.indexes[modelName];
@@ -17,7 +16,7 @@ module.exports = function(dbInstance, modelName, queryObj) {
 			var middleIndex = Math.floor(dataEntries.length / 2);
 			var firstIndex = 0;
 			var lastIndex = dataEntries.length - 1;
-			var data = [];
+			var finalData = [];
 			var lastMiddleIndex;
 
 			while (dataEntries[middleIndex].id != queryObj.id) {
@@ -36,21 +35,8 @@ module.exports = function(dbInstance, modelName, queryObj) {
 				}
 			}
 
-			data[0] = dataEntries[middleIndex];
-			return resolve(data);
-
-
-			// var matchedData = data[indexStr].filter(entry => {
-
-			// 	for (var i = 0; i < queryFields.length; ++i) {
-			// 		if (queryObj[queryFields[i]] != entry[queryFields[i]]) return false;
-			// 		else return true;
-			// 	}
-			// })
-
-
-
-			// return resolve(matchedData);
+			finalData[0] = dataEntries[middleIndex];
+			return resolve(finalData);
 		}
 		
 		var matchedDataAcc = []; // will accumulate all of our queries from below

@@ -94,7 +94,19 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 				console.timeEnd('read for name after items')
 				logTest('Reading for name after items', 1, result.length);
 			})
+
+			.then(() => {
+				console.time('delete by id')
+		
+				dbInstance.delete('Users', {id: 253})
+				.then(result => {
+					console.timeEnd('delete by id')
+					logTest('Deleting by id', 1, result.count);
+				})
+			})
 		})
+
+
 
 		.catch(err => console.log('Error:', err))
 	})

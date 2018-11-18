@@ -8,15 +8,16 @@ const _insertToFile = require('./utils/insert_to_file');
 // crud ops
 const _insert = require('./utils/crud/insert');
 const _read = require('./utils/crud/read');
+const _delete = require('./utils/crud/delete');
 
 // export main db here.
 class Database {
 
 	constructor() {
-		this.idTable = {}; // will hold an object with a key to each modelName and a currentIndex value
-		this.indexes = {};
-		this.models = {};
-		this.adjancencyListsFilePaths = {};
+		this.idTable = {}; // will hold an object with a key for each modelName and a currentIndex value assigned to it
+		this.indexes = {}; // contains all our data underneath the indexes
+		this.models = {}; // holds model information and config
+		this.adjancencyListsFilePaths = {}; // not using currently
 	
 		// load config on inits
 		_onInit(this)
@@ -50,6 +51,10 @@ class Database {
 
 	read(modelName, queryObj) {
 		return _read(this, modelName, queryObj);
+	}
+
+	delete(modelName, queryObj) {
+		return _delete(this, modelName, queryObj);
 	}
 }
 
