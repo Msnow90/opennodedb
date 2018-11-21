@@ -16,6 +16,9 @@ module.exports = function (dbInstance, modelName, queryObj) {
 		var lastIndex = dataEntries.length - 1;
 		var lastMiddleIndex;
 
+		if (!dataEntries[middleIndex]) return reject('No objects with specified id were found.');
+
+
 		while (dataEntries[middleIndex].id != queryObj.id) {
 
 			if (lastMiddleIndex == middleIndex) return reject(`Failed to find the id: ${queryObj.id}`);
@@ -32,18 +35,21 @@ module.exports = function (dbInstance, modelName, queryObj) {
 			}
 		}
 
-		return dataEntries.splice(middleIndex, 1);
+		var deletedData = dataEntries.splice(middleIndex, 1);
+		return resolve({deletedData, count: 1});
 	}
 
 
 	// if an id field isn't provided, we need to search our objects in our 
 	var deletionCount = 0;
+
 	for (var index in data) {
 
-		for (var i = 0; i < data[index]; ++i) {
+		for (var i = 0; i < data[index].length; ++i) {
 
-			var willDelete = queryFields.forEach(field => {
+			var willDelete = queryFields.map(field => {
 				if (data[index][i][field] == queryObj[field]) return true;
+				else return false;
 			})
 			.reduce((acc, curr) => {
 				return acc && curr;
@@ -53,10 +59,10 @@ module.exports = function (dbInstance, modelName, queryObj) {
 			if (willDelete) {
 				data[index].splice(i, 1);
 				deletionCount++;
+				i--;
 			}
 		}
 	}
-
 	return resolve({msg: "Successfully deleted query params.", count: deletionCount});
 	})
 	

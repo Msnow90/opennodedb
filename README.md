@@ -1,5 +1,5 @@
 # About
-OpenNodeDB is an open source database implementation made by me [(Matthew Snow)](http://www.matthewsnow.me). It's just a simple solution that uses an ORM approach to storing JSON data both in memory and in files (file system still in the works). Although the index system created doesn't use B or B+ trees, it uses a hash table for indexes (only for the id field), and each collection of record sets that the index points to has an incrementing id, we use a binary search method to quickly locate a record when searched by id.
+OpenNodeDB is an open source caching server with an ORM type overlay querying mechanism (a variation of something like Redis with more of a database-like architecture) made by me [(Matthew Snow)](http://www.matthewsnow.me). It's just a simple solution that uses an ORM approach to storing JSON data both in memory and in files (file system still in the works). Although the index system created doesn't use B or B+ trees, it uses a hash table for indexes (only for the id field), and each collection of record sets that the index points to has an incrementing id, we use a binary search method to quickly locate a record when searched by id.
 
 # Description
 This database implementation will be best used for small/medium sized intranets, or apps, where performance is a must. More to come as this project starts to take shape.
@@ -58,6 +58,12 @@ db.read('Users', { name: 'Apple Pear'})
 	// foundData will be an array with our results
 	// if an id was searched, there will only be 1 result at foundData[0]
 })
+
+
+
+// updating a user by id ---- db.update(modelname, queryObj, objDataToUpdate)
+db.update('Users', {id: 1234}, {name: 'This is my new name!'})
+.
 
 ```
 

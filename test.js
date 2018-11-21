@@ -64,7 +64,7 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 		Promise.all(insertions)
 		.then(results => {
 			console.timeEnd('insertion speed test');
-			logTest('Insertion test of 100,000 items', 100000, results.length);
+			logTest('Insertion test of 100,000 items', results.length, 100000);
 			console.log(chalk.bgYellow(`Current memory usage is: ${process.memoryUsage().heapUsed / 1000000} MB`))
 		})
 
@@ -73,7 +73,7 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 			dbInstance.read('Users', {name: 'Willy is secure.'})
 			.then(results => {
 				console.timeEnd('read 100,000 items test');
-				logTest('reading 100,000 users', 100000, results.length);
+				logTest('reading 100,000 users', results.length, 100000);
 			})
 		})
 
@@ -92,19 +92,58 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 			dbInstance.read('Users', { name: 'Matta is secure.'})
 			.then((result) => {
 				console.timeEnd('read for name after items')
-				logTest('Reading for name after items', 1, result.length);
-			})
-
-			.then(() => {
-				console.time('delete by id')
-		
-				dbInstance.delete('Users', {id: 253})
-				.then(result => {
-					console.timeEnd('delete by id')
-					logTest('Deleting by id', 1, result.count);
-				})
+				logTest('Reading for name after items', result.length, 1);
 			})
 		})
+
+
+		.then(() => {
+			console.time('update by id')
+
+			dbInstance.update('Users', {id: 7456}, {name: 'updated this name!!!'})
+			.then(result => {
+				console.timeEnd('update by id')
+				logTest('Updating by id', result.user.name, "updated this name!!!");
+			})
+		})
+
+
+
+		.then(() => {
+			console.time('update by name, 99,999 items')
+
+			dbInstance.update('Users', {name: 'Willy is secure.'}, {name: 'updated this name!!!'})
+			.then(result => {
+				console.timeEnd('update by name, 99,999 items')
+				logTest('Updating by name, 99,999 items', result.count, 99999);
+			})
+		})
+
+
+		
+		.then(() => {
+			console.time('delete by id')
+	
+			dbInstance.delete('Users', {id: 253})
+			.then(result => {
+				console.timeEnd('delete by id')
+				logTest('Deleting by id', result.count, 1);
+			})
+		})
+
+				
+		.then(() => {
+			console.time('delete by name, 100,000 users')
+	
+			dbInstance.delete('Users', {name: 'updated this name!!!'})
+			.then(result => {
+				console.timeEnd('delete by name, 100,000 users')
+				logTest('Deleting by name, 100,000 users', result.count, 99999);
+				logDatabaseSize(dbInstance);
+			})
+		})
+
+
 
 
 
@@ -130,7 +169,7 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 		}
 
 		else {
-			console.log(`Test ${testIndex} for: "${name} ===> ${chalk.red('Fail')}`)
+			console.log(`Test ${testIndex} for: "${name}" ===> ${chalk.red('Fail')}`)
 			console.log(`${chalk.green(`Expected output is: ${expectedOutput}`)}`)
 			console.log(`${chalk.red(`Actual output is: ${output}`)}`)
 		}
@@ -139,3 +178,13 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 	}
 
 
+	function logDatabaseSize(dbInstance) {
+		var size = 0;
+		for (var model in dbInstance.indexes) {
+			for (var index in dbInstance.indexes[model]) {
+				size += dbInstance.indexes[model][index].length;
+			}
+		}
+
+		console.log('Size of database is: ' + size + ' items.');
+	}

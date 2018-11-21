@@ -3,12 +3,12 @@ const fs = require('fs');
 // import our utility functions
 const _onInit = require('./utils/init');
 const _createIndexes = require('./utils/create_indexes');
-const _insertToFile = require('./utils/insert_to_file');
 
 // crud ops
 const _insert = require('./utils/crud/insert');
 const _read = require('./utils/crud/read');
 const _delete = require('./utils/crud/delete');
+const _update = require('./utils/crud/update');
 
 // export main db here.
 class Database {
@@ -55,6 +55,10 @@ class Database {
 
 	delete(modelName, queryObj) {
 		return _delete(this, modelName, queryObj);
+	}
+
+	update(modelName, queryObj, updatedObj) {
+		return _update(this, modelName, queryObj, updatedObj);
 	}
 }
 
