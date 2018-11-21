@@ -40,6 +40,13 @@ db.createModel('Users', 1, { name: String, password: String },
 	})
 
 
+// **** OR we can return a model interface so the model name doesn't need to be specified as an argument:
+
+var User = db.createModel('Users'.....)
+
+User.read({ id: 1234 })
+User.insert({ name: 'Some name...', password: 'A password...' })
+
 
 // inserting an object: db.insert(modelname, object)
 db.insert('Users', { name: 'Apple Pear', password: 'doublefruit123'})

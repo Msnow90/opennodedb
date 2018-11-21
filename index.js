@@ -37,6 +37,13 @@ class Database {
 		this.models[name] = {model: modelObj, config};
 		this.createIndexes(indexSize, name);
 		this.idTable[name] = 0;
+
+		return {
+			insert: this.insert.bind(this, name),
+			read: this.read.bind(this, name),
+			delete: this.delete.bind(this, name),
+			update: this.update.bind(this, name)
+		}
 	}
 
 

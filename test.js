@@ -6,7 +6,7 @@ var dbInstance = new ordb();
 
 var testIndex = 1;
 
-dbInstance.createModel('Users', 1, { name: String, password: String },
+var User = dbInstance.createModel('Users', 1, { name: String, password: String },
 	{
 		validators: {
 			name: function (name) {
@@ -140,6 +140,17 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 				console.timeEnd('delete by name, 100,000 users')
 				logTest('Deleting by name, 100,000 users', result.count, 99999);
 				logDatabaseSize(dbInstance);
+			})
+		})
+
+
+		.then(() => {
+			console.time('insert through User model obj')
+
+			User.insert({name: 'Testing', password: 'A secret@8y2h2u'})
+			.then(user => {
+				console.timeEnd('insert through User model obj');
+				logTest('inserting through User model', user.name, 'Testing is secure.')
 			})
 		})
 
