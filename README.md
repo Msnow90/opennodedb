@@ -2,7 +2,7 @@
 OpenNodeDB is an open source caching server with an ORM type overlay querying mechanism (a variation of something like Redis with more of a database-like architecture) made by me [(Matthew Snow)](http://www.matthewsnow.me). It's just a simple solution that uses an ORM approach to storing JSON data both in memory and in files (file system still in the works). Although the index system created doesn't use B or B+ trees, it uses a hash table for indexes (only for the id field), and each collection of record sets that the index points to has an incrementing id, we use a binary search method to quickly locate a record when searched by id.
 
 # Description
-This database implementation will be best used for small/medium sized intranets, or apps, where performance is a must. More to come as this project starts to take shape.
+This is an open source memory caching server (will be when finished), that can be utilized to store and retrieve things in a database like format. 
 
 # How to Use
 ## From a terminal, inside main project
@@ -57,6 +57,10 @@ dbInstance.createAssociation('Users', 'Posts');
 // add an assocation .addAssocation(parentModel, parentId, childModel, childId);
 dbInstance.addAssociation('Users', 78, 'Posts', 3);
 
+// to query data that is associated with a model: dbInstance.findAssociated(ownerModel, ownerId, childModel)
+dbInstance.findAssociated('Users', 24, 'Posts')
+.then(results => ....);
+
 
 // inserting an object: db.insert(modelname, object)
 db.insert('Users', { name: 'Apple Pear', password: 'doublefruit123'})
@@ -90,11 +94,26 @@ db.update('Users', {id: 1234}, {name: 'This is my new name!'})
 | Inserting 100,000 items      |  198.723 ms   |
 | Reading by id (after 100000) |  0.075 ms     |
 | Reading by name 		""			 |  3.9 ms    	 |
+| Updating by id							 |  0.758 ms		 |
+| Update 99,999 items by name	 |  28.092 ms		 |
+| Delete by id								 |  0.555 ms		 |
+| Delete 99,998 items by name  |  37.156 ms    |
+| Insert through User Model		 |  0.051 ms     |
+| Create an association				 |  0.089 ms		 |
+| Add an association entry		 |  0.105 ms     |
+| Find One Associated Obj			 |  0.516 ms		 |
+| Finding 11 associated objs	 |  0.076 ms		 |
+
+* Need to figure out why finding 1 associated object is slower than finding 11.
+
 
 
 # Goals
 1. Implement Getters functionality
 2. Create a file persistence mechanism using child processes.
-3. Creating multiple driver mechanisms (using a tcp socket) with auth.
-4. Create update functionality
-5. Create delete functionality
+3. Creating multiple driver mechanisms: TCP socket with auth, HTTP server w/ auth, in app option.
+4. Cleanup CRUD operation login, make more readable and efficient in terms of decisions
+5. Implement proper error handling and feedback
+
+# Contributions
+Any contributions are welcome, please open an issue and provide a PR if possible. I'm also open to discussing/collaborating.
