@@ -14,6 +14,7 @@ const _update = require('./utils/crud/update');
 const _createAssociation = require('./utils/associations/createAssociation');
 const _addAssociation = require('./utils/associations/addAssociation');
 const _findAssociated = require('./utils/associations/findAssociated');
+const _removeAssociation = require('./utils/associations/removeAssociation');
 
 // export main db here.
 class Database {
@@ -100,8 +101,12 @@ class Database {
 		return _addAssociation(this, parentModel, parentId, childModel, childId);
 	}
 
-	findAssociated(parentModel, ownerId, childModel) {
-		return _findAssociated(this, parentModel, ownerId, childModel);
+	findAssociated(parentModel, parentId, childModel) {
+		return _findAssociated(this, parentModel, parentId, childModel);
+	}
+
+	removeAssociation(parentModel, parentId, childModel, childId) {
+		return _removeAssociation(this, parentModel, parentId, childModel, childId);
 	}
 }
 
