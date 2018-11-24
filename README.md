@@ -48,6 +48,16 @@ User.read({ id: 1234 })
 User.insert({ name: 'Some name...', password: 'A password...' })
 
 
+// *** Creating associations is also pretty simple
+
+var Post = db.createModel('Posts', { title: String, genre: String})
+
+dbInstance.createAssociation('Users', 'Posts');
+
+// add an assocation .addAssocation(parentModel, parentId, childModel, childId);
+dbInstance.addAssociation('Users', 78, 'Posts', 3);
+
+
 // inserting an object: db.insert(modelname, object)
 db.insert('Users', { name: 'Apple Pear', password: 'doublefruit123'})
 .then(user => {

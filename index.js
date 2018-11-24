@@ -10,6 +10,11 @@ const _read = require('./utils/crud/read');
 const _delete = require('./utils/crud/delete');
 const _update = require('./utils/crud/update');
 
+// association ops
+const _createAssociation = require('./utils/associations/createAssociation');
+const _addAssociation = require('./utils/associations/addAssociation');
+const _findAssociated = require('./utils/associations/findAssociated');
+
 // export main db here.
 class Database {
 
@@ -17,8 +22,24 @@ class Database {
 		this.idTable = {}; // will hold an object with a key for each modelName and a currentIndex value assigned to it
 		this.indexes = {}; // contains all our data underneath the indexes
 		this.models = {}; // holds model information and config
-		this.adjancencyListsFilePaths = {}; // not using currently
-	
+		this.relationsTables = {}; // will have keys based on model name, then a property for the associated model, and a property containing an adjacency list for (model 1) ids => (model 2) ids
+		
+		/*
+		ex of relationsTables:
+		
+		{
+			Users: {
+				has: 'Stories',
+				table: {
+					'123': [1, 4, 6],
+					'147': [9, 87, 23]
+				}
+			}
+		}
+
+
+		*/
+
 		// load config on inits
 		_onInit(this)
 	}
@@ -35,9 +56,10 @@ class Database {
 	*/
 	createModel(name, indexSize, modelObj, config) {
 		this.models[name] = {model: modelObj, config};
-		this.createIndexes(indexSize, name);
 		this.idTable[name] = 0;
+		this.createIndexes(indexSize, name);
 
+		// returns an object similar to a data model, this enables us to not have to specify the modelname when calling the methods attached
 		return {
 			insert: this.insert.bind(this, name),
 			read: this.read.bind(this, name),
@@ -66,6 +88,20 @@ class Database {
 
 	update(modelName, queryObj, updatedObj) {
 		return _update(this, modelName, queryObj, updatedObj);
+	}
+
+
+	// begin association functionality
+	createAssociation(parentModel, childModel) {
+		return _createAssociation(this, parentModel, childModel);
+	}
+
+	addAssociation(parentModel, parentId, childModel, childId) {
+		return _addAssociation(this, parentModel, parentId, childModel, childId);
+	}
+
+	findAssociated(parentModel, ownerId, childModel) {
+		return _findAssociated(this, parentModel, ownerId, childModel);
 	}
 }
 

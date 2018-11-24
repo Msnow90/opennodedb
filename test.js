@@ -26,6 +26,8 @@ var User = dbInstance.createModel('Users', 1, { name: String, password: String }
 		}
 	});
 
+var Post = dbInstance.createModel('Posts', 1, {title: String, genre: String});
+
 
 console.time('1st test')	
 dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
@@ -155,6 +157,69 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 		})
 
 
+	
+		.then(() => {
+
+			console.time('create an association')
+
+			dbInstance.createAssociation('Users', 'Posts');
+
+			console.timeEnd('create an association');
+
+			logTest('creating an association', dbInstance.relationsTables['Users'][0].has, 'Posts');
+
+			
+		})
+
+		.then(() => {
+
+			Post.insert({ title: 'Harry Potter', genre: 'Fantasy'})
+			.then(post => {
+				console.time('add association');
+				dbInstance.addAssociation('Users', 0, 'Posts', post.id);
+				console.timeEnd('add association');
+				logTest('adding an association', dbInstance.relationsTables['Users'][0].table[0][0], 0)
+				
+			})
+		})
+
+
+
+		.then(() => {
+			console.time('find associated')
+			dbInstance.findAssociated('Users', 0, 'Posts')
+			.then(results => {
+				console.timeEnd('find associated');
+				logTest('finding associated objects', results[0].title, 'Harry Potter')
+			})
+		})
+
+
+		.then(() => {
+			var posts = [];
+
+			for (var i = 0; i < 10; ++i) {
+				posts.push(Post.insert({ title: 'A book', genre: 'Mystery' }));
+			}
+
+			Promise.all(posts)
+			.then(results => {
+				results.forEach(post => {
+					dbInstance.addAssociation('Users', 0, 'Posts', post.id);
+				})
+			})
+			.then(results => {
+
+				console.time('find association of 11 items')
+
+				dbInstance.findAssociated('Users', 0, 'Posts')
+				.then(foundPosts => {
+					console.timeEnd('find association of 11 items')
+
+					logTest('Finding 11 associated items', foundPosts.length, 11);
+				})
+			})
+		})
 
 
 
