@@ -24,22 +24,6 @@ class Database {
 		this.indexes = {}; // contains all our data underneath the indexes
 		this.models = {}; // holds model information and config
 		this.relationsTables = {}; // will have keys based on model name, then a property for the associated model, and a property containing an adjacency list for (model 1) ids => (model 2) ids
-		
-		/*
-		ex of relationsTables:
-		
-		{
-			Users: {
-				has: 'Stories',
-				table: {
-					'123': [1, 4, 6],
-					'147': [9, 87, 23]
-				}
-			}
-		}
-
-
-		*/
 
 		// load config on inits
 		_onInit(this)
@@ -65,7 +49,11 @@ class Database {
 			insert: this.insert.bind(this, name),
 			read: this.read.bind(this, name),
 			delete: this.delete.bind(this, name),
-			update: this.update.bind(this, name)
+			update: this.update.bind(this, name),
+			createAssociation: this.createAssociation.bind(this, name),
+			addAssociation: this.addAssociation.bind(this, name),
+			removeAssociation: this.removeAssociation.bind(this, name),
+			findAssociated: this.findAssociated.bind(this, name)
 		}
 	}
 

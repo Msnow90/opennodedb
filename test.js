@@ -222,21 +222,21 @@ dbInstance.insert('Users', { name: 'Matta', password: 'password123' })
 							.then(() => {
 
 								console.time('remove an association')
-				
+
 								dbInstance.removeAssociation('Users', 0, 'Posts', 3)
 								console.timeEnd('remove an association');
 								var table = dbInstance.relationsTables['Users'][0].table;
-				
+
 								logTest('Removing an association', table[0].length, 10);
-				
-				
+
+
 							})
 
 					})
 
 
 
-	
+
 
 
 
